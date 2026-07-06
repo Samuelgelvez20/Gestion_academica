@@ -54,8 +54,11 @@ El proyecto se desarrolló siguiendo un flujo profesional de ingeniería de dato
 ## Estructura del proyecto
 
 ```
-├── README.md
-└── proyecto_academico.sql   -- Script completo: creación de BD, tablas, datos de prueba y función
+├── capturas/                      -- Capturas de evidencia usadas en el README
+├── Consulta_y_funcion.sql         -- Función ClasificarDesempeño + consulta de evidencia
+├── Creacion_DataBase_Tables.sql   -- Base de datos, tablas, FKs, CHECK e índice
+├── Insercion_Datos.sql            -- Datos de prueba (6 casos límite)
+└── README.md
 ```
 
 ---
@@ -131,15 +134,24 @@ El modelo fue verificado formalmente contra cada forma normal, no solo declarado
 
 1. Tener instalado MySQL 8 (o MariaDB 10.x) y acceso a un cliente (MySQL Workbench, consola `mysql`, DBeaver, etc.).
 2. Clonar este repositorio.
-3. Ejecutar el script completo:
+3. Ejecutar los scripts **en este orden**, ya que cada uno depende del anterior:
 
+   **a) Crear la base de datos y las tablas:**
 ```bash
-mysql -u tu_usuario -p < proyecto_academico.sql
+   mysql -u tu_usuario -p < Creacion_DataBase_Tables.sql
 ```
 
-Esto crea la base de datos `gestion_academica`, las tres tablas, los datos de prueba y la función `ClasificarDesempeño`, todo en un solo paso.
+   **b) Insertar los datos de prueba** (requiere que las tablas ya existan):
+```bash
+   mysql -u tu_usuario -p < Insercion_Datos.sql
+```
 
-4. Probar la función:
+   **c) Crear la función y ejecutar la consulta de evidencia** (requiere que existan tablas y datos):
+```bash
+   mysql -u tu_usuario -p < Consulta_y_funcion.sql
+```
+
+4. Verificar el resultado:
 
 ```sql
 USE gestion_academica;
@@ -150,6 +162,8 @@ SELECT
     ClasificarDesempeño(id_estudiante) AS clasificacion
 FROM estudiantes;
 ```
+
+> ⚠️ El orden importa: `Creacion_DataBase_Tables.sql` crea el esquema y las restricciones (FKs, `CHECK`, índice); `Insercion_Datos.sql` necesita que esas tablas ya existan; y `Consulta_y_funcion.sql` necesita tanto las tablas como los datos para que la consulta de evidencia tenga sentido.
 
 ---
 
